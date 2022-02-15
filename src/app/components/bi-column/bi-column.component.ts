@@ -7,6 +7,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BiColumnComponent implements OnInit {
   constructor() {}
-
+  public data: string[] = ['test1', 'test2', 'test3', 'test4'];
   ngOnInit(): void {}
 }
