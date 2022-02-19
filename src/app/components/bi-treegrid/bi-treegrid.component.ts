@@ -1,18 +1,23 @@
-import {
-  CdkVirtualScrollViewport,
-  VIRTUAL_SCROLL_STRATEGY,
-} from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   MatTreeFlatDataSource,
   MatTreeFlattener,
 } from '@angular/material/tree';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { dataSource, virtualData } from 'src/app/helper/dataset';
-import { GridTableDataSource } from 'src/app/virtual-scroll/grid-datasource';
-import { CustomVirtualScrollStrategy } from 'src/app/virtual-scroll/virtual-scroll.strategy';
+import { TableVirtualScrollStrategy } from 'src/app/virtual-scroll/virtual-scroll.strategy';
+
+const PAGESIZE = 20;
+const ROW_HEIGHT = 48;
 
 interface dataSetNode {
   TaskID: number;
@@ -39,22 +44,20 @@ interface ExampleFlatNode {
   selector: 'bi-treegrid',
   templateUrl: './bi-treegrid.component.html',
   styleUrls: ['./bi-treegrid.component.scss'],
-  providers: [
-    { provide: VIRTUAL_SCROLL_STRATEGY, useClass: CustomVirtualScrollStrategy },
-  ],
 })
-export class BiTreegridComponent<T> implements OnInit {
+export class BiTreegridComponent implements AfterViewInit {
   displayedColumns: string[] = ['TaskID', 'FIELD1'];
   //displayedColumns: string[] = ['id', 'name', 'age'];
-  public data: dataSetNode[];
 
-  rows = Array(200)
-    .fill(0)
-    .map((x, i) => {
-      return { name: 'name' + i, id: i, age: 27 };
-    });
+  @ViewChild(CdkVirtualScrollViewport) virtualScroll: CdkVirtualScrollViewport;
 
-  public data_: any[] = [];
+  public fullDatasource: dataSetNode[];
+
+  static BUFFER_SIZE = 3;
+  rowHeight = 48;
+  headerHeight = 56;
+
+  gridHeight = 400;
 
   private transformer = (node: dataSetNode, level: number) => {
     return {
@@ -87,22 +90,27 @@ export class BiTreegridComponent<T> implements OnInit {
   sticky = false;
   itemSize = 100;
 
-  offset: Observable<number>;
-  visibleColumns: any[];
-  _alldata: any[];
+  constructor() {
+    dataSource();
 
-  placeholderHeight = 0;
-
-  page = 1;
-  pageSize = 10;
-
-  constructor() {}
+    this.fullDatasource = virtualData;
+    this.dataSource.data = this.fullDatasource.slice(0, 10);
+    console.log(this.treeControl);
+  }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
-  ngOnInit(): void {
-    dataSource();
-    this.data = virtualData;
-    this.dataSource.data = this.data;
+  ngAfterViewInit() {
+    this.virtualScroll.renderedRangeStream.subscribe((range) => {
+      console.log(range, this.fullDatasource.slice(range.start, range.end));
+      this.dataSource.data = this.fullDatasource.slice(range.start, range.end);
+    });
+  }
+
+  onlClick(data?: any) {
+    console.log(data);
+    console.log(this.treeControl.expandAll());
+    this.treeControl.expandAll();
+    this.treeControl.toggle(data);
   }
 }
