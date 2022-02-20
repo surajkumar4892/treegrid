@@ -1,3 +1,38 @@
+$greaycolor: #e0e0e0;
 table {
   width: 100%;
+  border-spacing: 0;
+  border-collapse: separate;
+  td {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-color: $greaycolor;
+  }
+  .mat-row {
+    height: 40px;
+  }
+}
+.box-table {
+  border: 1px solid $greaycolor;
+  margin: 15px;
+  position: fixed;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  height: 100%;
+  .tablehead {
+    height: 45px;
+    border-bottom: 1px solid $greaycolor;
+    thead {
+      tr {
+        th {
+          border-left: 1px solid $greaycolor;
+          &:first-child {
+            border-left: none;
+          }
+        }
+      }
+    }
+  }
 }

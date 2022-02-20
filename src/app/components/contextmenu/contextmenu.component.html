@@ -1,0 +1,11 @@
+<!-- 
+<mat-list role="list">
+    <mat-list-item role="listitem">Item 1</mat-list-item>
+
+  </mat-list>
+onContextMenuAction1(item: contextmenudetail) {
+    alert(`Click on Action 1 for ${item.label}`);
+  } -->
+<button mat-menu-item *ngFor="let item of contextmenu">
+    <mat-icon>{{item.icon}}</mat-icon> {{item.label}}
+</button>
