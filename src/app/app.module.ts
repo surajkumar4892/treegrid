@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BiTreegridModule } from './components/bi-treegrid/bi-treegrid.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DemoMaterialModule } from './material/material.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -14,7 +13,6 @@ import { DemoMaterialModule } from './material/material.module';
     AppRoutingModule,
     BiTreegridModule,
     BrowserAnimationsModule,
-    DemoMaterialModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

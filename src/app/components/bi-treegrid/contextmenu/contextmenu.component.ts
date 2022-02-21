@@ -18,6 +18,7 @@ export class ContextmenuComponent implements OnInit, OnChanges {
   constructor() {}
 
   ngOnInit(): void {}
+  
   ngOnChanges(changes: SimpleChanges): void {
     console.log(this.contextmenu);
   }

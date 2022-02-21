@@ -9,6 +9,11 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDialogModule } from '@angular/material/dialog';
+import {MatInputModule} from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select'
+
 
 @NgModule({
   exports: [
@@ -22,6 +27,10 @@ import { MatMenuModule } from '@angular/material/menu';
     ScrollingModule,
     MatMenuModule,
     MatListModule,
+    MatDialogModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule,
   ],
 })
 export class DemoMaterialModule {}

@@ -7,6 +7,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import {
   MatTreeFlatDataSource,
@@ -16,7 +17,8 @@ import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { dataSource, virtualData } from 'src/app/helper/dataset';
 import { TableVirtualScrollStrategy } from 'src/app/virtual-scroll/virtual-scroll.strategy';
-import { contextmenudetail } from '../contextmenu/contextmenu.modal';
+import { contextmenudetail } from './contextmenu/contextmenu.modal';
+import { EditColumnDialogComponent } from './dialog/column/edit/edit.component';
 
 const PAGESIZE = 20;
 const ROW_HEIGHT = 48;
@@ -208,29 +210,23 @@ export class BiTreegridComponent implements AfterViewInit {
   sticky = false;
   itemSize = 100;
 
-  constructor() {
+  constructor(public dialog: MatDialog) {
     dataSource();
 
     this.fullDatasource = virtualData;
     this.dataSource.data = this.fullDatasource.slice(0, 10);
-    console.log(this.treeControl.dataNodes);
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   ngAfterViewInit() {
     this.virtualScroll.renderedRangeStream.subscribe((range) => {
-      console.log(this.treeControl.dataNodes);
       this.dataSource.data = this.fullDatasource.slice(range.start, range.end);
-      this.treeControl.expand(this.treeControl.dataNodes[range.start]);
       this.treeControl.expandAll();
-      //this.treeControl.toggle(this.treeControl.dataNodes[range.end]);
     });
   }
 
   onlClick(data?: any) {
-    console.log(data);
-    console.log(this.treeControl.expandAll());
     this.treeControl.expandAll();
     this.treeControl.toggle(data);
   }
@@ -242,7 +238,6 @@ export class BiTreegridComponent implements AfterViewInit {
   contextMenuPosition = { x: '0px', y: '0px' };
 
   onContextMenu(event: MouseEvent, item, actiontype) {
-    console.log(event, item);
     this.Contextitem = [];
 
     this.mainContextMenu.forEach((e) => {
@@ -250,7 +245,6 @@ export class BiTreegridComponent implements AfterViewInit {
         this.Contextitem.push(e);
       } else if (e.actiontype == actiontype) {
         this.Contextitem.push(e);
-        console.log(e);
       }
     });
 
@@ -270,5 +264,17 @@ export class BiTreegridComponent implements AfterViewInit {
     this.contextMenu.menuData = { item: item };
     this.contextMenu.menu.focusFirstItem('mouse');
     this.contextMenu.openMenu();
+  }
+
+  testClick(){
+    console.log('test')
+
+    let dialogRef = this.dialog.open(EditColumnDialogComponent, {
+      width: '250px',
+      data: { }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
   }
 }
