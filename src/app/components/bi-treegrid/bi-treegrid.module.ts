@@ -4,15 +4,20 @@ import { BiTreegridComponent } from './bi-treegrid.component';
 import { BiColumnsComponent } from '../bi-columns/bi-columns.component';
 import { BiColumnComponent } from '../bi-column/bi-column.component';
 import { DemoMaterialModule } from 'src/app/material/material.module';
-import { ContextmenuComponent } from '../contextmenu/contextmenu.component';
+import { ContextmenuComponent } from './contextmenu/contextmenu.component';
+import { EditColumnDialogComponent } from './dialog/column/edit/edit.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+
 @NgModule({
   declarations: [
     BiTreegridComponent,
     BiColumnsComponent,
     BiColumnComponent,
     ContextmenuComponent,
+    EditColumnDialogComponent,
   ],
-  imports: [CommonModule, DemoMaterialModule],
+  imports: [CommonModule, DemoMaterialModule,
+    FormsModule, ReactiveFormsModule],
   exports: [BiTreegridComponent, BiColumnsComponent, BiColumnComponent],
 })
 export class BiTreegridModule {}
