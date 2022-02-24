@@ -17,7 +17,10 @@ import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { dataSource, virtualData } from 'src/app/helper/dataset';
 import { TableVirtualScrollStrategy } from 'src/app/virtual-scroll/virtual-scroll.strategy';
-import { contextmenudetail } from './contextmenu/contextmenu.modal';
+import {
+  ContextMenuDetail,
+  MainContextMenuVal,
+} from './contextmenu/contextmenu.modal';
 import { EditColumnDialogComponent } from './dialog/column/edit/edit.component';
 import { NameColumnDialogComponent } from './dialog/column/name/name.component';
 
@@ -51,124 +54,11 @@ interface ExampleFlatNode {
   styleUrls: ['./bi-treegrid.component.scss'],
 })
 export class BiTreegridComponent implements AfterViewInit {
-  displayedColumns: string[] = ['TaskID', 'FIELD1'];
+  displayedColumns: string[] = ['TaskID', 'FIELD1', 'TaskID1'];
   //displayedColumns: string[] = ['id', 'name', 'age'];
 
-  Contextitem: contextmenudetail[] = [];
-  mainContextMenu: contextmenudetail[] = [
-    {
-      label: 'Edit',
-      icon: 'edit_outline',
-      id: 1,
-      actiontype: 'headeraction',
-      isenable: false,
-    },
-    {
-      label: 'New',
-      icon: 'add_outline',
-      id: 1,
-      actiontype: 'headeraction',
-      isenable: false,
-    },
-    {
-      label: 'Delete',
-      icon: 'delete_outline',
-      id: 1,
-      actiontype: 'headeraction',
-      isenable: false,
-    },
-    {
-      label: 'Choose',
-      icon: 'task_alt_outline',
-      id: 1,
-      actiontype: 'headeraction',
-      isenable: false,
-    },
-    {
-      label: 'Freeze',
-      icon: 'edit_off_outline',
-      id: 1,
-      actiontype: 'headeraction',
-      isenable: false,
-    },
-    {
-      label: 'Filter',
-      icon: 'filter_alt_outline',
-      id: 1,
-      actiontype: 'headeraction',
-      isenable: false,
-    },
-    {
-      label: 'MultiSort',
-      icon: 'sort_outline',
-      id: 1,
-      actiontype: 'headeraction',
-      isenable: false,
-    },
-    {
-      label: 'AddNext',
-      icon: 'add_outline',
-      id: 1,
-      actiontype: 'tbodyaction',
-      isenable: false,
-    },
-    {
-      label: 'AddChild',
-      icon: 'add_outline',
-      id: 1,
-      actiontype: 'tbodyaction',
-      isenable: false,
-    },
-    {
-      label: 'Delete',
-      icon: 'delete_outline',
-      id: 1,
-      actiontype: 'tbodyaction',
-      isenable: false,
-    },
-    {
-      label: 'Edit',
-      icon: 'edit_outline',
-      id: 1,
-      actiontype: 'tbodyaction',
-      isenable: false,
-    },
-    {
-      label: 'MultiSelect',
-      icon: 'sort_outline',
-      id: 1,
-      actiontype: 'tbodyaction',
-      isenable: false,
-    },
-    {
-      label: 'Copy',
-      icon: 'sort_outline',
-      id: 1,
-      actiontype: 'tbodyaction',
-      isenable: false,
-    },
-    {
-      label: 'Paste',
-      icon: 'sort_outline',
-      id: 1,
-      actiontype: 'tbodyaction',
-      isenable: false,
-    },
-    {
-      label: 'PasteNext',
-      icon: 'edit_off_outline',
-      id: 1,
-      actiontype: 'tbodyaction',
-      isenable: false,
-    },
-    {
-      label: 'PasteChild',
-      icon: 'filter_alt_outline',
-      id: 1,
-      actiontype: 'tbodyaction',
-      isenable: false,
-    },
-  ];
+  contextItem: ContextMenuDetail[] = [];
+  mainContextMenu: ContextMenuDetail[] = [];
 
   @ViewChild(CdkVirtualScrollViewport) virtualScroll: CdkVirtualScrollViewport;
 
@@ -211,11 +101,11 @@ export class BiTreegridComponent implements AfterViewInit {
   sticky = false;
   itemSize = 100;
 
-  constructor(public dialog: MatDialog) {
+  constructor() {
     dataSource();
-
     this.fullDatasource = virtualData;
     this.dataSource.data = this.fullDatasource.slice(0, 10);
+    this.mainContextMenu = MainContextMenuVal;
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
@@ -223,7 +113,7 @@ export class BiTreegridComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.virtualScroll.renderedRangeStream.subscribe((range) => {
       this.dataSource.data = this.fullDatasource.slice(range.start, range.end);
-      this.treeControl.expandAll();
+      //this.treeControl.expandAll();
     });
   }
 
@@ -239,25 +129,15 @@ export class BiTreegridComponent implements AfterViewInit {
   contextMenuPosition = { x: '0px', y: '0px' };
 
   onContextMenu(event: MouseEvent, item, actiontype) {
-    this.Contextitem = [];
+    this.contextItem = [];
 
     this.mainContextMenu.forEach((e) => {
       if (e.actiontype == actiontype) {
-        this.Contextitem.push(e);
+        this.contextItem.push(e);
       } else if (e.actiontype == actiontype) {
-        this.Contextitem.push(e);
+        this.contextItem.push(e);
       }
     });
-
-    // for(let i=0;i<this.mainContextMenu.length;i++){
-    //   if(actiontype=="headeraction"){
-    //     this.Contextitem.push(this.mainContextMenu[i])
-    //   }
-    //   else if(actiontype=="tbodyaction"){
-    //     this.Contextitem.push(this.mainContextMenu[i])
-    //   }
-
-    // }
 
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
@@ -267,27 +147,18 @@ export class BiTreegridComponent implements AfterViewInit {
     this.contextMenu.openMenu();
   }
 
-  editClick(){
-    console.log('test')
+  // testClick() {
+  //   console.log('test');
 
-    let dialogRef = this.dialog.open(EditColumnDialogComponent, {
-      width: '450px',
-      data: { }
-    });
+  //   let dialogRef = this.dialog.open(EditColumnDialogComponent, {
+  //     width: '250px',
+  //     data: {},
+  //   });
 
-    dialogRef.afterClosed().subscribe(result => {
-    });
-  }
+  //   dialogRef.afterClosed().subscribe((result) => {});
+  // }
 
-  nameClick(){
-    console.log('test')
-
-    let dialogRef = this.dialog.open(NameColumnDialogComponent, {
-      width: '450px',
-      data: { }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-    });
+  onClickContextMenu(event) {
+    console.log(event);
   }
 }

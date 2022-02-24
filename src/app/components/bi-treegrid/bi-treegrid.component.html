@@ -1,14 +1,9 @@
 <div class="box-table">
-    <button (click)="editClick()">Edit</button>
-    <button (click)="nameClick()">Name</button>
     <table class="tablehead">
         <thead>
             <tr>
-
                 <th *ngFor="let data of headeritem">
-                    <!-- <div>{{data.name}}</div> -->
                     <div (contextmenu)="onContextMenu($event, data,'headeraction')"> {{data.name}}</div>
-
                 </th>
             </tr>
         </thead>
@@ -16,9 +11,14 @@
     </table>
     <cdk-virtual-scroll-viewport itemSize="48" style="height: 700px;">
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" [multiTemplateDataRows]="true">
-            <ng-container matColumnDef="TaskID">
+            <ng-container matColumnDef="TaskID1">
+                <th mat-header-cell *matHeaderCellDef> TaskID </th>
+                <td mat-cell *matCellDef="let data" (contextmenu)="onContextMenu($event, data,'tbodyaction')">
+                    {{data.TaskID}} </td>
+            </ng-container>
+            <ng-container matColumnDef="FIELD1">
                 <th mat-header-cell *matHeaderCellDef>
-                    <span [style.paddingLeft.px]="40">TaskID</span>
+                    <span [style.paddingLeft.px]="40">FIELD1</span>
                 </th>
                 <td mat-cell *matCellDef="let data" (contextmenu)="onContextMenu($event, data,'tbodyaction')">
                     <button mat-icon-button [style.visibility]="!data.expandable ? 'hidden' : ''"
@@ -28,17 +28,16 @@
                         </mat-icon>
                     </button>
 
-                    {{data.TaskID}}
+                    {{data.FIELD1}}
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="FIELD1">
-                <th mat-header-cell *matHeaderCellDef> FIELD1 </th>
+            <ng-container matColumnDef="TaskID">
+                <th mat-header-cell *matHeaderCellDef> TaskID </th>
                 <td mat-cell *matCellDef="let data" (contextmenu)="onContextMenu($event, data,'tbodyaction')">
-                    {{data.FIELD1}} </td>
+                    {{data.TaskID}} </td>
             </ng-container>
 
-            <!-- <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr> -->
             <ng-template let-row matRowDef cdkVirtualFor [matRowDefColumns]="displayedColumns"
                 [cdkVirtualForOf]="fullDatasource">
                 <tr mat-row></tr>
@@ -50,9 +49,7 @@
         [style.top]="contextMenuPosition.y" [matMenuTriggerFor]="contextMenu"></div>
     <mat-menu #contextMenu="matMenu">
         <ng-template matMenuContent let-item="item">
-            <bi-contextmenu [contextmenu]="Contextitem"></bi-contextmenu>
-            <!-- <button mat-menu-item (click)="onContextMenuAction1(item)">Action 1</button>
-        <button mat-menu-item (click)="onContextMenuAction2(item)">Action 2</button> -->
+            <bi-contextmenu [contextMenu]="contextItem" (contextMenuVal)="onClickContextMenu($event)"></bi-contextmenu>
         </ng-template>
     </mat-menu>
 </div>

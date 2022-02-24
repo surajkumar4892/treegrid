@@ -1,11 +1,13 @@
 import {
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnInit,
+  Output,
   SimpleChanges,
 } from '@angular/core';
-import { contextmenudetail } from './contextmenu.modal';
+import { ContextMenuDetail } from './contextmenu.modal';
 
 @Component({
   selector: 'bi-contextmenu',
@@ -13,13 +15,17 @@ import { contextmenudetail } from './contextmenu.modal';
   styleUrls: ['./contextmenu.component.scss'],
 })
 export class ContextmenuComponent implements OnInit, OnChanges {
-  @Input() contextmenu: Array<contextmenudetail> = [];
+  @Input() contextMenu: Array<ContextMenuDetail> = [];
+  @Output() contextMenuVal: EventEmitter<ContextMenuDetail> =
+    new EventEmitter();
 
   constructor() {}
 
   ngOnInit(): void {}
-  
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.contextmenu);
+
+  ngOnChanges(changes: SimpleChanges): void {}
+
+  onButtonClick(item: ContextMenuDetail) {
+    this.contextMenuVal.emit(item);
   }
 }
