@@ -22,6 +22,7 @@ import {
   MainContextMenuVal,
 } from './contextmenu/contextmenu.modal';
 import { EditColumnDialogComponent } from './dialog/column/edit/edit.component';
+import { NameColumnDialogComponent } from './dialog/column/name/name.component';
 
 const PAGESIZE = 20;
 const ROW_HEIGHT = 48;
@@ -146,6 +147,7 @@ export class BiTreegridComponent implements AfterViewInit {
     this.contextMenu.openMenu();
   }
 
+<<<<<<< HEAD
   // testClick() {
   //   console.log('test');
 
@@ -153,6 +155,27 @@ export class BiTreegridComponent implements AfterViewInit {
   //     width: '250px',
   //     data: {},
   //   });
+=======
+  editClick(){
+    console.log('test')
+
+    let dialogRef = this.dialog.open(EditColumnDialogComponent, {
+      width: '450px',
+      data: { }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  nameClick(){
+    console.log('test')
+
+    let dialogRef = this.dialog.open(NameColumnDialogComponent, {
+      width: '450px',
+      data: { }
+    });
+>>>>>>> 0c8c87a86a51adb485aaa32abee3ad2e8b4856a1
 
   //   dialogRef.afterClosed().subscribe((result) => {});
   // }

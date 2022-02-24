@@ -1,18 +1,17 @@
-import { Component, Inject } from '@angular/core';
+import { Component,Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-
 @Component({
-  selector: 'edit.component',
-  templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss']
+  selector: 'app-name',
+  templateUrl: './name.component.html',
+  styleUrls: ['./name.component.scss']
 })
-export class EditColumnDialogComponent {
-  constructor(
-    public dialogRef: MatDialogRef<EditColumnDialogComponent>,
+export class NameColumnDialogComponent {
+
+  constructor(public dialogRef: MatDialogRef<NameColumnDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder){ 
   }
 
   frameworks:string[]= ['Text', 'Number', 'Date','Boolean','DropdownList'];
@@ -20,7 +19,7 @@ export class EditColumnDialogComponent {
   ddlfontcolors:string[]= ['Red','Whilte','Green','Yellow','Blue','Black'];
   ddlcolbgs:string[]= ['Red','Whilte','Green','Yellow','Blue','Black'];
 
-  editform= this.formBuilder.group({
+  nameform= this.formBuilder.group({
     headername: [null, Validators.required],
     dataType:[null],
     colwidth:[null],
@@ -32,7 +31,7 @@ export class EditColumnDialogComponent {
 
 
   onConfirmClick(): void {
-    console.log(this.editform.value)
+    console.log(this.nameform.value)
     //this.dialogRef.close();
   }
   onCancelClick(): void {
