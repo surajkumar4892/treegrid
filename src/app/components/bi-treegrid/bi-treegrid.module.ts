@@ -7,6 +7,7 @@ import { DemoMaterialModule } from 'src/app/material/material.module';
 import { ContextmenuComponent } from './contextmenu/contextmenu.component';
 import { EditColumnDialogComponent } from './dialog/column/edit/edit.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { NameColumnDialogComponent } from './dialog/column/name/name.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     BiColumnComponent,
     ContextmenuComponent,
     EditColumnDialogComponent,
+    NameColumnDialogComponent,
   ],
   imports: [CommonModule, DemoMaterialModule,
     FormsModule, ReactiveFormsModule],
