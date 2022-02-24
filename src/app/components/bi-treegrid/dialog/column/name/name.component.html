@@ -1,6 +1,6 @@
 <mat-dialog-content>
 
-    <form [formGroup]="editform">
+    <form [formGroup]="nameform">
         <mat-form-field class="form-field" appearance="outline">
           <mat-label> Header Name</mat-label>
           <input matInput formControlName="headername" required>
@@ -43,11 +43,11 @@
         </mat-form-field>
         <section>
             <mat-checkbox formControlName = "txtwrap">Text Wrap</mat-checkbox>
-        </section>          
+        </section>
     </form>
 
 </mat-dialog-content>
 <mat-dialog-actions align="center">
-    <button mat-raised-button color="primary" [disabled]="editform.invalid" (click)="onConfirmClick()">Save</button>
+    <button mat-raised-button color="primary" [disabled]="nameform.invalid" (click)="onConfirmClick()">Save</button>
     <button mat-raised-button mat-raised-close tabindex="-1" (click)="onCancelClick()">Cancel</button>
 </mat-dialog-actions>

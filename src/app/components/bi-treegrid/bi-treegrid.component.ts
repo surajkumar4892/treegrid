@@ -19,6 +19,7 @@ import { dataSource, virtualData } from 'src/app/helper/dataset';
 import { TableVirtualScrollStrategy } from 'src/app/virtual-scroll/virtual-scroll.strategy';
 import { contextmenudetail } from './contextmenu/contextmenu.modal';
 import { EditColumnDialogComponent } from './dialog/column/edit/edit.component';
+import { NameColumnDialogComponent } from './dialog/column/name/name.component';
 
 const PAGESIZE = 20;
 const ROW_HEIGHT = 48;
@@ -266,11 +267,23 @@ export class BiTreegridComponent implements AfterViewInit {
     this.contextMenu.openMenu();
   }
 
-  testClick(){
+  editClick(){
     console.log('test')
 
     let dialogRef = this.dialog.open(EditColumnDialogComponent, {
-      width: '250px',
+      width: '450px',
+      data: { }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  nameClick(){
+    console.log('test')
+
+    let dialogRef = this.dialog.open(NameColumnDialogComponent, {
+      width: '450px',
       data: { }
     });
 
