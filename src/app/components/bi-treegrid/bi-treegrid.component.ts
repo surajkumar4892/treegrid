@@ -125,7 +125,7 @@ export class BiTreegridComponent implements AfterViewInit {
   // context menu fuctions
   @ViewChild(MatMenuTrigger)
   contextMenu: MatMenuTrigger;
-  headeritem = [{ name: 'table1' }, { name: 'table2' }];
+  headeritem = [{ name: 'table1' }, { name: 'table2' },{ name: 'table3' }];
   contextMenuPosition = { x: '0px', y: '0px' };
 
   onContextMenu(event: MouseEvent, item, actiontype) {
