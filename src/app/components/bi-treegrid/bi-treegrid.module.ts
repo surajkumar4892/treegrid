@@ -6,8 +6,9 @@ import { BiColumnComponent } from '../bi-column/bi-column.component';
 import { DemoMaterialModule } from 'src/app/material/material.module';
 import { ContextmenuComponent } from './contextmenu/contextmenu.component';
 import { EditColumnDialogComponent } from './dialog/column/edit/edit.component';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NameColumnDialogComponent } from './dialog/column/name/name.component';
+import { ResizableModule } from 'src/app/resizable/resizable.module';
 
 @NgModule({
   declarations: [
@@ -18,8 +19,13 @@ import { NameColumnDialogComponent } from './dialog/column/name/name.component';
     EditColumnDialogComponent,
     NameColumnDialogComponent,
   ],
-  imports: [CommonModule, DemoMaterialModule,
-    FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    DemoMaterialModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ResizableModule,
+  ],
   exports: [BiTreegridComponent, BiColumnsComponent, BiColumnComponent],
 })
 export class BiTreegridModule {}

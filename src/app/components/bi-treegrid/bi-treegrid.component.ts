@@ -1,132 +1,174 @@
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { FlatTreeControl } from '@angular/cdk/tree';
 import {
-  AfterViewInit,
   Component,
+  Injectable,
+  ChangeDetectionStrategy,
   Inject,
-  OnInit,
   ViewChild,
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { FlatTreeControl } from '@angular/cdk/tree';
 import {
   MatTreeFlatDataSource,
   MatTreeFlattener,
 } from '@angular/material/tree';
-import { Observable, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { dataSource, virtualData } from 'src/app/helper/dataset';
-import { TableVirtualScrollStrategy } from 'src/app/virtual-scroll/virtual-scroll.strategy';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import {
   ContextMenuDetail,
   MainContextMenuVal,
 } from './contextmenu/contextmenu.modal';
-import { EditColumnDialogComponent } from './dialog/column/edit/edit.component';
-import { NameColumnDialogComponent } from './dialog/column/name/name.component';
+import { MatMenuTrigger } from '@angular/material/menu';
 
-const PAGESIZE = 20;
-const ROW_HEIGHT = 48;
-
-interface dataSetNode {
-  TaskID: number;
-  FIELD1: string;
-  FIELD2: number;
-  FIELD3: number;
-  FIELD4: number;
-  FIELD5: number;
-  Crew?: dataSetNode[];
+// Interface used for representing a node of data
+export interface FakeNode {
+  name: string;
+  children: FakeNode[];
 }
 
-interface ExampleFlatNode {
-  expandable: boolean;
-  TaskID: number;
-  FIELD1: string;
-  FIELD2: number;
-  FIELD3: number;
-  FIELD4: number;
-  FIELD5: number;
+const MAX_LEVELS = 3;
+const MAX_NODES_PER_LEVEL = 50000;
+
+// Generates fake data
+@Injectable()
+export class RandomDataProvider {
+  data: FakeNode[] = [];
+
+  constructor() {
+    for (let i = 0; i < MAX_NODES_PER_LEVEL; i++) {
+      this.data.push(generateNode(0, i));
+    }
+  }
+}
+
+// Function for generating a fake data node
+function generateNode(level: number, index: number): FakeNode {
+  let children: FakeNode[] = [];
+  if (level < MAX_LEVELS) {
+    for (let i = 0; i < 4; i++) {
+      children.push(generateNode(level + 1, i));
+    }
+  }
+
+  return {
+    name: 'level ' + level + ' index ' + index,
+    children,
+  };
+}
+
+// Interface used for representing a node of data within the flat tree component
+export interface FakeFlatNode {
+  name: string;
   level: number;
+  hasChildren: boolean;
 }
 
+// Component containing virtual scrolling flat tree
 @Component({
   selector: 'bi-treegrid',
   templateUrl: './bi-treegrid.component.html',
   styleUrls: ['./bi-treegrid.component.scss'],
+  providers: [RandomDataProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BiTreegridComponent implements AfterViewInit {
-  displayedColumns: string[] = ['TaskID', 'FIELD1', 'TaskID1'];
-  //displayedColumns: string[] = ['id', 'name', 'age'];
+export class BiTreegridComponent {
+  @ViewChild(CdkVirtualScrollViewport, { static: false })
+  public viewPort: CdkVirtualScrollViewport;
 
   contextItem: ContextMenuDetail[] = [];
   mainContextMenu: ContextMenuDetail[] = [];
 
-  @ViewChild(CdkVirtualScrollViewport) virtualScroll: CdkVirtualScrollViewport;
+  @ViewChild(MatMenuTrigger)
+  contextMenu: MatMenuTrigger;
+  contextMenuPosition = { x: '0px', y: '0px' };
 
-  public fullDatasource: dataSetNode[];
+  public headeritem = [{ name: 'Col 1' }, { name: 'Col 2' }, { name: 'Col 3' }];
 
-  static BUFFER_SIZE = 3;
-  rowHeight = 48;
-  headerHeight = 56;
+  nodes: any[];
 
-  gridHeight = 400;
+  persons: any[];
 
-  private transformer = (node: dataSetNode, level: number) => {
-    return {
-      expandable: !!node.Crew && node.Crew.length > 0,
-      TaskID: node.TaskID,
-      FIELD1: node.FIELD1,
-      FIELD2: node.FIELD2,
-      FIELD3: node.FIELD3,
-      FIELD4: node.FIELD4,
-      FIELD5: node.FIELD5,
-      level: level,
-    };
-  };
+  public get inverseOfTranslation(): string {
+    if (!this.viewPort || !this.viewPort['_renderedContentOffset']) {
+      return '-0px';
+    }
+    let offset = this.viewPort['_renderedContentOffset'];
+    return `-${offset}px`;
+  }
+  // Provided generated data
+  readonly providedData = this.dataProvider.data;
+  // Tree control to feed to the cdk tree
+  readonly treeControl: FlatTreeControl<FakeFlatNode> =
+    new FlatTreeControl<FakeFlatNode>(getNodeLevel, getIsNodeExpandable);
+  // Data source fed into the cdk tree control
+  readonly dataSource: MatTreeFlatDataSource<FakeNode, FakeFlatNode>;
 
-  treeControl = new FlatTreeControl<ExampleFlatNode>(
-    (node) => node.level,
-    (node) => node.expandable
-  );
+  constructor(readonly dataProvider: RandomDataProvider) {
+    // Tells tree data source builder how to flatten our nested node data into flat nodes
+    const treeFlattener = new MatTreeFlattener<FakeNode, FakeFlatNode>(
+      nodeTransformer,
+      getNodeLevel,
+      getIsNodeExpandable,
+      getNodeChildren
+    );
+    // Populates our flattened data into the tree control
+    this.dataSource = new MatTreeFlatDataSource(
+      this.treeControl,
+      treeFlattener
+    );
+    this.dataSource.data = this.providedData;
+    console.log(this.dataSource.data);
 
-  treeFlattener = new MatTreeFlattener(
-    this.transformer,
-    (node) => node.level,
-    (node) => node.expandable,
-    (node) => node.Crew
-  );
+    this.nodes = new Array(50000).fill(null).map((item, i) => ({
+      id: `${i}`,
+      name: `rootDynamic${i}`,
+      children: new Array(4).fill(null).map((item, n) => ({
+        id: `${i}.${n}`,
+        name: `rootChildDynamic${i}.${n}`,
+        children: new Array(4).fill(null).map((item, n) => ({
+          id: `${i}.${n}`,
+          name: `rootChildDynamic${i}.${n}`,
+        })),
+      })),
+    }));
 
-  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-  pending: boolean;
-  sticky = false;
-  itemSize = 100;
-
-  constructor() {
-    dataSource();
-    this.fullDatasource = virtualData;
-    this.dataSource.data = this.fullDatasource.slice(0, 10);
+    this.persons = [
+      {
+        name: 'abc 1',
+        email: 'abc1@email.com',
+        address: 'address 1',
+      },
+      {
+        name: 'abc 2',
+        email: 'abc2@email.com',
+        address: 'address 2',
+      },
+    ];
     this.mainContextMenu = MainContextMenuVal;
   }
 
-  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
-
-  ngAfterViewInit() {
-    this.virtualScroll.renderedRangeStream.subscribe((range) => {
-      this.dataSource.data = this.fullDatasource.slice(range.start, range.end);
-      //this.treeControl.expandAll();
-    });
+  // Number of dom nodes rendered in the virtually scrolling tree
+  get numTreeNodes() {
+    return document.querySelectorAll('.node').length;
   }
 
-  onlClick(data?: any) {
-    this.treeControl.expandAll();
-    this.treeControl.toggle(data);
+  // Number of dom nodes rendered in the non-virtually scrolling cdk-tree
+  get numCdkTreeNodes() {
+    return document.querySelectorAll('cdk-tree-node').length;
   }
 
-  // context menu fuctions
-  @ViewChild(MatMenuTrigger)
-  contextMenu: MatMenuTrigger;
-  headeritem = [{ name: 'table1' }, { name: 'table2' },{ name: 'table3' }];
-  contextMenuPosition = { x: '0px', y: '0px' };
+  hasChild(index: number, nodeData: FakeFlatNode) {
+    return getIsNodeExpandable(nodeData);
+  }
+  tdWidth: number;
+  clickon(event) {
+    var tables = document.getElementsByClassName('bar');
+    if (tables) {
+      this.tdWidth = event.clientX;
+    }
+    // console.log(event.clientX)
+
+    // var tables = document.getElementsByTagName('table');
+  }
+
+  //var tables = document.getElementsByClassName('flexiCol');
 
   onContextMenu(event: MouseEvent, item, actiontype) {
     this.contextItem = [];
@@ -147,18 +189,31 @@ export class BiTreegridComponent implements AfterViewInit {
     this.contextMenu.openMenu();
   }
 
-  // testClick() {
-  //   console.log('test');
-
-  //   let dialogRef = this.dialog.open(EditColumnDialogComponent, {
-  //     width: '250px',
-  //     data: {},
-  //   });
-
-  //   dialogRef.afterClosed().subscribe((result) => {});
-  // }
-
   onClickContextMenu(event) {
     console.log(event);
   }
+}
+
+// Function that maps a nested node to a flat node
+function nodeTransformer(node: FakeNode, level: number) {
+  return {
+    name: node.name,
+    level,
+    hasChildren: node.children.length > 0,
+  };
+}
+
+// Function that gets a flat node's level
+function getNodeLevel({ level }: FakeFlatNode) {
+  return level;
+}
+
+// Function that determines whether a flat node is expandable or not
+function getIsNodeExpandable({ hasChildren }: FakeFlatNode) {
+  return hasChildren;
+}
+
+// Function that returns a nested node's list of children
+function getNodeChildren({ children }: FakeNode) {
+  return children;
 }
