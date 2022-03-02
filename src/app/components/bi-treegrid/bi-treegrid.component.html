@@ -1,60 +1,34 @@
-<div class="box-table">
-    <table class="tablehead">
-        <colgroup>
-        <col>
-        <col>
-        <col>
-         </colgroup>
-        <thead>
-            <tr>
-                <th *ngFor="let data of headeritem">
-                    <div (contextmenu)="onContextMenu($event, data,'headeraction')"> {{data.name}}</div>
-                </th>
-            </tr>
-        </thead>
+<div class="container">
+    <cdk-virtual-scroll-viewport class="virtual-scroll-container" itemSize="18">
+        <table>
+            <thead>
+                <tr>
+                    <!-- <th resizable [style.top]="inverseOfTranslation">Col 1</th>
+                    <th resizable [style.top]="inverseOfTranslation">Col 2</th>
+                    <th [style.top]="inverseOfTranslation">Col 3</th> -->
 
-    </table>
-    <cdk-virtual-scroll-viewport itemSize="48" style="height: 700px;">
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" [multiTemplateDataRows]="true">
-            <colgroup>
-                <col>
-                <col>
-                <col>
-           </colgroup>
-            <ng-container matColumnDef="TaskID1">
-                <th mat-header-cell *matHeaderCellDef> TaskID </th>
-                <td mat-cell *matCellDef="let data" (contextmenu)="onContextMenu($event, data,'tbodyaction')">
-                    {{data.TaskID}} </td>
-            </ng-container>
-            <ng-container matColumnDef="FIELD1">
-                <th mat-header-cell *matHeaderCellDef>
-                    <span [style.paddingLeft.px]="40">FIELD1</span>
-                </th>
-                <td mat-cell *matCellDef="let data" (contextmenu)="onContextMenu($event, data,'tbodyaction')">
-                    <button mat-icon-button [style.visibility]="!data.expandable ? 'hidden' : ''"
-                        [style.marginLeft.px]="data.level * 32" (click)="treeControl.toggle(data)">
-                        <mat-icon class="mat-icon-rtl-mirror">
-                            {{treeControl.isExpanded(data) ? 'expand_more' : 'chevron_right'}}
-                        </mat-icon>
-                    </button>
+                    <th resizable [style.top]="inverseOfTranslation" *ngFor="let data of headeritem">
+                        <div (contextmenu)="onContextMenu($event, data,'headeraction')"> {{data.name}}</div>
+                    </th>
 
-                    {{data.FIELD1}}
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="TaskID">
-                <th mat-header-cell *matHeaderCellDef> TaskID </th>
-                <td mat-cell *matCellDef="let data" (contextmenu)="onContextMenu($event, data,'tbodyaction')">
-                    {{data.TaskID}} </td>
-            </ng-container>
-
-            <ng-template let-row matRowDef cdkVirtualFor [matRowDefColumns]="displayedColumns"
-                [cdkVirtualForOf]="fullDatasource">
-                <tr mat-row></tr>
-            </ng-template>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *cdkVirtualFor="let node of dataSource, let i = index">
+                    <td (contextmenu)="onContextMenu($event, node,'tbodyaction')">Col {{i}} Value - {{node.name}}</td>
+                    <td (contextmenu)="onContextMenu($event, node,'tbodyaction')">
+                        <div class="node" [style.padding-left]="node.level * 24 + 'px'">
+                            <button (click)="treeControl.toggle(node)" *ngIf="node.hasChildren">
+                                {{ treeControl.isExpanded(node) ? '-' : '+' }}
+                            </button>
+                            {{ node.name }}
+                        </div>
+                    </td>
+                    <td (contextmenu)="onContextMenu($event, node,'tbodyaction')">Col 3 Value - {{node.name}}</td>
+                </tr>
+            </tbody>
         </table>
     </cdk-virtual-scroll-viewport>
-
     <div style="visibility: hidden; position: fixed" [style.left]="contextMenuPosition.x"
         [style.top]="contextMenuPosition.y" [matMenuTriggerFor]="contextMenu"></div>
     <mat-menu #contextMenu="matMenu">
