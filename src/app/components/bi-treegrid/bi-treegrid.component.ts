@@ -16,6 +16,8 @@ import {
   MainContextMenuVal,
 } from './contextmenu/contextmenu.modal';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { MatDialog } from '@angular/material/dialog';
+import { EditColumnDialogComponent } from './dialog/column/edit/edit.component';
 
 // Interface used for representing a node of data
 export interface FakeNode {
@@ -108,7 +110,10 @@ export class BiTreegridComponent {
   // Data source fed into the cdk tree control
   readonly dataSource: MatTreeFlatDataSource<FakeNode, FakeFlatNode>;
 
-  constructor(readonly dataProvider: RandomDataProvider) {
+  constructor(
+    readonly dataProvider: RandomDataProvider,
+    private dialog: MatDialog
+  ) {
     // Tells tree data source builder how to flatten our nested node data into flat nodes
     const treeFlattener = new MatTreeFlattener<FakeNode, FakeFlatNode>(
       nodeTransformer,
@@ -198,10 +203,22 @@ export class BiTreegridComponent {
   }
 
   onClickContextMenu(event) {
-    console.log(event);
-  }
+    console.log('test', event);
 
-  testClick() {}
+    let dialogRef = this.dialog.open(EditColumnDialogComponent, {
+      width: '250px',
+      data: {},
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed', result);
+      const headerIntemIndex = this.headeritem.findIndex(
+        (item) => item.id === this.contextMenu.menuData.item['id']
+      );
+      //this.headerCssData = result;
+      this.headeritem[headerIntemIndex].name = result.headername;
+    });
+  }
 }
 
 // Function that maps a nested node to a flat node
