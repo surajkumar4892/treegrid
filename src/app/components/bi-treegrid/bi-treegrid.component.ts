@@ -24,7 +24,7 @@ export interface FakeNode {
 }
 
 const MAX_LEVELS = 3;
-const MAX_NODES_PER_LEVEL = 50000;
+const MAX_NODES_PER_LEVEL = 50;
 
 // Generates fake data
 @Injectable()
@@ -79,7 +79,13 @@ export class BiTreegridComponent {
   contextMenu: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
 
-  public headeritem = [{ name: 'Col 1' }, { name: 'Col 2' }, { name: 'Col 3' }];
+  public headeritem = [
+    { name: 'Col 1', id: 0, show: true, isNode: true },
+    { name: 'Col 2', id: 1, show: true, isNode: false },
+    { name: 'Col 3', id: 2, show: true, isNode: false },
+  ];
+
+  public showTd = [true, true, true];
 
   nodes: any[];
 
@@ -192,6 +198,8 @@ export class BiTreegridComponent {
   onClickContextMenu(event) {
     console.log(event);
   }
+
+  testClick() {}
 }
 
 // Function that maps a nested node to a flat node
