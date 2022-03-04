@@ -1,31 +1,47 @@
 <div class="container">
     <cdk-virtual-scroll-viewport class="virtual-scroll-container" itemSize="18">
-        <table  class="tablehead">
+        <table class="tablehead">
             <thead>
                 <tr>
                     <!-- <th resizable [style.top]="inverseOfTranslation">Col 1</th>
                     <th resizable [style.top]="inverseOfTranslation">Col 2</th>
                     <th [style.top]="inverseOfTranslation">Col 3</th> -->
+                    <ng-container *ngFor="let data of headeritem">
+                        <th *ngIf="data.show" resizable [style.top]="inverseOfTranslation">
+                            <div (contextmenu)="onContextMenu($event, data,'headeraction')"> {{data.name}}</div>
+                        </th>
+                    </ng-container>
 
-                    <th resizable [style.top]="inverseOfTranslation" *ngFor="let data of headeritem">
-                        <div (contextmenu)="onContextMenu($event, data,'headeraction')"> {{data.name}}</div>
-                    </th>
 
                 </tr>
             </thead>
             <tbody>
                 <tr *cdkVirtualFor="let node of dataSource, let i = index">
-                   
-                    <td (contextmenu)="onContextMenu($event, node,'tbodyaction')">
-                        <div class="node" [style.padding-left]="node.level * 24 + 'px'">
-                            <button class="expendbtn" (click)="treeControl.toggle(node)" *ngIf="node.hasChildren">
-                              <mat-icon> {{ treeControl.isExpanded(node) ? 'arrow_drop_up' : 'arrow_drop_down' }}</mat-icon>  
-                            </button>
-                            {{ node.name }}
-                        </div>
-                    </td>
-                    <td (contextmenu)="onContextMenu($event, node,'tbodyaction')">Col {{i}} Value - {{node.name}}</td>
-                    <td (contextmenu)="onContextMenu($event, node,'tbodyaction')">Col 3 Value - {{node.name}}</td>
+
+                    <ng-container *ngFor="let data of headeritem, let j = index">
+                        <ng-container *ngIf="data.isNode && data.show">
+                            <td [id]="j" (contextmenu)="onContextMenu($event, node,'tbodyaction')">
+                                <div class="node" [style.padding-left]="node.level * 24 + 'px'">
+                                    <button class="expendbtn" (click)="treeControl.toggle(node)"
+                                        *ngIf="node.hasChildren">
+                                        <mat-icon> {{ treeControl.isExpanded(node) ? 'arrow_drop_up' : 'arrow_drop_down'
+                                            }}
+                                        </mat-icon>
+                                    </button>
+                                    {{ node.name }}
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container *ngIf="!data.isNode && data.show">
+                            <td [id]="j" (contextmenu)="onContextMenu($event, node,'tbodyaction')">Col {{j+1}}
+                                Value -
+                                {{node.name}}</td>
+                        </ng-container>
+
+                    </ng-container>
+
+
                 </tr>
             </tbody>
         </table>

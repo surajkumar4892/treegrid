@@ -26,7 +26,7 @@ export interface FakeNode {
 }
 
 const MAX_LEVELS = 3;
-const MAX_NODES_PER_LEVEL = 50000;
+const MAX_NODES_PER_LEVEL = 50;
 
 // Generates fake data
 @Injectable()
@@ -81,8 +81,16 @@ export class BiTreegridComponent {
   contextMenu: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
 
-  public headeritem = [{ name: 'Col 1', id: 1 }, { name: 'Col 2',id: 2 }, { name: 'Col 3', id: 3 }];
-  headerCssData: any;
+  public headeritem = [
+    { name: 'Col 1', id: 0, show: true, isNode: true },
+    { name: 'Col 2', id: 1, show: true, isNode: false },
+    { name: 'Col 3', id: 2, show: true, isNode: false },
+    { name: 'Col 4', id: 3, show: true, isNode: false },
+    { name: 'Col 5', id: 4, show: true, isNode: false },
+  ];
+
+  public showTd = [true, true, true, true];
+
   nodes: any[];
 
   persons: any[];
@@ -102,7 +110,10 @@ export class BiTreegridComponent {
   // Data source fed into the cdk tree control
   readonly dataSource: MatTreeFlatDataSource<FakeNode, FakeFlatNode>;
 
-  constructor(readonly dataProvider: RandomDataProvider, private dialog: MatDialog) {
+  constructor(
+    readonly dataProvider: RandomDataProvider,
+    private dialog: MatDialog
+  ) {
     // Tells tree data source builder how to flatten our nested node data into flat nodes
     const treeFlattener = new MatTreeFlattener<FakeNode, FakeFlatNode>(
       nodeTransformer,
@@ -192,7 +203,7 @@ export class BiTreegridComponent {
   }
 
   onClickContextMenu(event) {
-    console.log('test',event);
+    console.log('test', event);
 
     let dialogRef = this.dialog.open(EditColumnDialogComponent, {
       width: '250px',
@@ -201,12 +212,13 @@ export class BiTreegridComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed', result);
-      const headerIntemIndex = this.headeritem.findIndex(item => item.id === this.contextMenu.menuData.item['id']);
-      this.headerCssData = result;
+      const headerIntemIndex = this.headeritem.findIndex(
+        (item) => item.id === this.contextMenu.menuData.item['id']
+      );
+      //this.headerCssData = result;
       this.headeritem[headerIntemIndex].name = result.headername;
     });
   }
-
 }
 
 // Function that maps a nested node to a flat node
