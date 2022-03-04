@@ -19,21 +19,26 @@
                 <tr *cdkVirtualFor="let node of dataSource, let i = index">
 
                     <ng-container *ngFor="let data of headeritem, let j = index">
+                        <ng-container *ngIf="data.isNode && data.show">
+                            <td [id]="j" (contextmenu)="onContextMenu($event, node,'tbodyaction')">
+                                <div class="node" [style.padding-left]="node.level * 24 + 'px'">
+                                    <button class="expendbtn" (click)="treeControl.toggle(node)"
+                                        *ngIf="node.hasChildren">
+                                        <mat-icon> {{ treeControl.isExpanded(node) ? 'arrow_drop_up' : 'arrow_drop_down'
+                                            }}
+                                        </mat-icon>
+                                    </button>
+                                    {{ node.name }}
+                                </div>
+                            </td>
+                        </ng-container>
 
-                        <td [id]="j" (contextmenu)="onContextMenu($event, node,'tbodyaction')">
-                            <div class="node" [style.padding-left]="node.level * 24 + 'px'">
-                                <button class="expendbtn" (click)="treeControl.toggle(node)" *ngIf="node.hasChildren">
-                                    <mat-icon> {{ treeControl.isExpanded(node) ? 'arrow_drop_up' : 'arrow_drop_down'
-                                        }}
-                                    </mat-icon>
-                                </button>
-                                {{ node.name }}
-                            </div>
-                        </td>
+                        <ng-container *ngIf="!data.isNode && data.show">
+                            <td [id]="j" (contextmenu)="onContextMenu($event, node,'tbodyaction')">Col {{j+1}}
+                                Value -
+                                {{node.name}}</td>
+                        </ng-container>
 
-                        <!-- <td *ngIf=!data[j].isNode (contextmenu)="onContextMenu($event, node,'tbodyaction')">Col {{j+1}}
-                            Value -
-                            {{node.name}}</td> -->
                     </ng-container>
 
 

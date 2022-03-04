@@ -83,9 +83,11 @@ export class BiTreegridComponent {
     { name: 'Col 1', id: 0, show: true, isNode: true },
     { name: 'Col 2', id: 1, show: true, isNode: false },
     { name: 'Col 3', id: 2, show: true, isNode: false },
+    { name: 'Col 4', id: 3, show: true, isNode: false },
+    { name: 'Col 5', id: 4, show: true, isNode: false },
   ];
 
-  public showTd = [true, true, true];
+  public showTd = [true, true, true, true];
 
   nodes: any[];
 
