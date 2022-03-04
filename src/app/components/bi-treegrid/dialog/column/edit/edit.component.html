@@ -48,6 +48,6 @@
 
 </mat-dialog-content>
 <mat-dialog-actions align="center">
-    <button mat-raised-button color="primary" [disabled]="editform.invalid" (click)="onConfirmClick()">Save</button>
+    <button mat-raised-button color="primary" [disabled]="editform.invalid" [mat-dialog-close]="editform.value">Save</button>
     <button mat-raised-button mat-raised-close tabindex="-1" (click)="onCancelClick()">Cancel</button>
 </mat-dialog-actions>
