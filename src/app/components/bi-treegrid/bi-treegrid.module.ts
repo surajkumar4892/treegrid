@@ -25,6 +25,7 @@ import { ResizableModule } from 'src/app/resizable/resizable.module';
     FormsModule,
     ReactiveFormsModule,
     ResizableModule,
+    
   ],
   exports: [BiTreegridComponent, BiColumnsComponent, BiColumnComponent],
 })

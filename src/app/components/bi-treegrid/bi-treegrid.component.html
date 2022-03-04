@@ -1,6 +1,6 @@
 <div class="container">
     <cdk-virtual-scroll-viewport class="virtual-scroll-container" itemSize="18">
-        <table>
+        <table  class="tablehead">
             <thead>
                 <tr>
                     <!-- <th resizable [style.top]="inverseOfTranslation">Col 1</th>
@@ -15,15 +15,16 @@
             </thead>
             <tbody>
                 <tr *cdkVirtualFor="let node of dataSource, let i = index">
-                    <td (contextmenu)="onContextMenu($event, node,'tbodyaction')">Col {{i}} Value - {{node.name}}</td>
+                   
                     <td (contextmenu)="onContextMenu($event, node,'tbodyaction')">
                         <div class="node" [style.padding-left]="node.level * 24 + 'px'">
-                            <button (click)="treeControl.toggle(node)" *ngIf="node.hasChildren">
-                                {{ treeControl.isExpanded(node) ? '-' : '+' }}
+                            <button class="expendbtn" (click)="treeControl.toggle(node)" *ngIf="node.hasChildren">
+                              <mat-icon> {{ treeControl.isExpanded(node) ? 'arrow_drop_up' : 'arrow_drop_down' }}</mat-icon>  
                             </button>
                             {{ node.name }}
                         </div>
                     </td>
+                    <td (contextmenu)="onContextMenu($event, node,'tbodyaction')">Col {{i}} Value - {{node.name}}</td>
                     <td (contextmenu)="onContextMenu($event, node,'tbodyaction')">Col 3 Value - {{node.name}}</td>
                 </tr>
             </tbody>
