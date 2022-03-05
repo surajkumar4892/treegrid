@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Inject,
   ViewChild,
+  HostListener,
 } from '@angular/core';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import {
@@ -18,6 +19,7 @@ import {
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { EditColumnDialogComponent } from './dialog/column/edit/edit.component';
+import { tableheader } from './bi-treegridheader.model';
 
 // Interface used for representing a node of data
 export interface FakeNode {
@@ -71,17 +73,19 @@ export interface FakeFlatNode {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BiTreegridComponent {
+  @HostListener('window:scroll', ['$event']) 
   @ViewChild(CdkVirtualScrollViewport, { static: false })
   public viewPort: CdkVirtualScrollViewport;
 
   contextItem: ContextMenuDetail[] = [];
   mainContextMenu: ContextMenuDetail[] = [];
+  scrolladdclass:boolean=false
 
   @ViewChild(MatMenuTrigger)
   contextMenu: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
 
-  public headeritem = [
+  public headeritem:tableheader[] = [
     { name: 'Col 1', id: 0, show: true, isNode: true },
     { name: 'Col 2', id: 1, show: true, isNode: false },
     { name: 'Col 3', id: 2, show: true, isNode: false },
@@ -155,6 +159,7 @@ export class BiTreegridComponent {
       },
     ];
     this.mainContextMenu = MainContextMenuVal;
+
   }
 
   // Number of dom nodes rendered in the virtually scrolling tree
@@ -219,6 +224,12 @@ export class BiTreegridComponent {
       this.headeritem[headerIntemIndex].name = result.headername;
     });
   }
+
+ displayCounter(count) {
+
+  }
+
+
 }
 
 // Function that maps a nested node to a flat node

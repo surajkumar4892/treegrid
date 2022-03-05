@@ -42,7 +42,7 @@ table {
   }
 
 
-.container {
+.table-panel {
   height: 600px;
   background-color: #ffffff;
 
@@ -59,11 +59,13 @@ table {
       thead tr th {
         height: 40px;
         border-bottom: 1px solid #d0d0d0;
-        padding: 7px 20px 7px 7px;
+        padding: 7px 20px 7px 7px; 
         position: sticky;
         background-color: #ffffff;
-        font-weight: bold;
+        font-weight: bold; left: 0; top: 0; z-index: 11;
+        &:first-child{ z-index: 111;}
       }
+     
 
       tbody tr td {
       
@@ -84,3 +86,11 @@ table {
     }
   }
 }
+.table-box{
+  width: 100%;
+  .table-action{ border-bottom: 1px solid #ccc;
+     display: flex;
+      justify-content: space-between; padding: 10px;
+  }
+}
+.fixedtd{ position: sticky; left: 0; z-index: 1; background-color: #fff;}

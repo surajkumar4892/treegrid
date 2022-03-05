@@ -1,5 +1,11 @@
-<div class="container">
-    <cdk-virtual-scroll-viewport class="virtual-scroll-container" itemSize="18">
+<div class="table-box">
+    <div class="table-action">
+        <div></div>
+<app-selectcolumns [columns]="headeritem" (valueChange)='displayCounter($event)'></app-selectcolumns>
+</div>
+<div class="table-panel">
+
+    <cdk-virtual-scroll-viewport  class="virtual-scroll-container" itemSize="18">
         <table class="tablehead">
             <thead>
                 <tr>
@@ -7,7 +13,7 @@
                     <th resizable [style.top]="inverseOfTranslation">Col 2</th>
                     <th [style.top]="inverseOfTranslation">Col 3</th> -->
                     <ng-container *ngFor="let data of headeritem">
-                        <th *ngIf="data.show" resizable [style.top]="inverseOfTranslation">
+                        <th *ngIf="data.show"  resizable [style.top]="inverseOfTranslation">
                             <div (contextmenu)="onContextMenu($event, data,'headeraction')"> {{data.name}}</div>
                         </th>
                     </ng-container>
@@ -20,7 +26,7 @@
 
                     <ng-container *ngFor="let data of headeritem, let j = index">
                         <ng-container *ngIf="data.isNode && data.show">
-                            <td [id]="j" (contextmenu)="onContextMenu($event, node,'tbodyaction')">
+                            <td [id]="j"  [ngClass]="(data.show==true && j==0)?'fixedtd':''"  (contextmenu)="onContextMenu($event, node,'tbodyaction')">
                                 <div class="node" [style.padding-left]="node.level * 24 + 'px'">
                                     <button class="expendbtn" (click)="treeControl.toggle(node)"
                                         *ngIf="node.hasChildren">
@@ -46,6 +52,8 @@
             </tbody>
         </table>
     </cdk-virtual-scroll-viewport>
+</div>
+</div>
     <div style="visibility: hidden; position: fixed" [style.left]="contextMenuPosition.x"
         [style.top]="contextMenuPosition.y" [matMenuTriggerFor]="contextMenu"></div>
     <mat-menu #contextMenu="matMenu">
@@ -53,4 +61,3 @@
             <bi-contextmenu [contextMenu]="contextItem" (contextMenuVal)="onClickContextMenu($event)"></bi-contextmenu>
         </ng-template>
     </mat-menu>
-</div>
