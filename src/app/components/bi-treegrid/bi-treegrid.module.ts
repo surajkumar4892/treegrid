@@ -9,6 +9,7 @@ import { EditColumnDialogComponent } from './dialog/column/edit/edit.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NameColumnDialogComponent } from './dialog/column/name/name.component';
 import { ResizableModule } from 'src/app/resizable/resizable.module';
+import { SelectcolumnsModule } from './selectcolumns/selectcolumns.module';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { ResizableModule } from 'src/app/resizable/resizable.module';
     FormsModule,
     ReactiveFormsModule,
     ResizableModule,
+    SelectcolumnsModule
     
   ],
   exports: [BiTreegridComponent, BiColumnsComponent, BiColumnComponent],

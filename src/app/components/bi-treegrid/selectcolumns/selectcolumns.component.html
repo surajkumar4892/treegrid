@@ -1,0 +1,23 @@
+<button mat-button [matMenuTriggerFor]="menu" mat-raised-button  color="primary">Columns<mat-icon>arrow_drop_down</mat-icon> </button>
+<mat-menu #menu="matMenu">
+
+    <input class="searchform" (click)="$event.stopPropagation();" type="text" [(ngModel)]="searchText"
+        placeholder="Search">
+    <ng-container *ngIf="(columns | filter: searchText).length > 0; else noResults">
+        <button mat-menu-item (click)="$event.stopPropagation();"> <label  (change)="checkUncheckAll()"><input type="checkbox" [(ngModel)]="masterSelected"
+                name="list_name" value=""  /> <strong>Select/ Unselect All</strong></label>
+        </button>
+        <button (click)="$event.stopPropagation();" mat-menu-item
+            *ngFor="let item of columns | slice:1 | filter: searchText ;  let i = index;">
+            <label  (change)="isAllSelected(item)">
+            <input type="checkbox" [(ngModel)]="item.show"  checked="item.show" name="list_name" value="{{item.id}}"
+                 />
+                {{item.name}}
+        </label>
+        </button>
+    </ng-container>
+    <ng-template #noResults>
+        <p class="text-center">No results found for "{{searchText}}".</p>
+    </ng-template>
+
+</mat-menu>
