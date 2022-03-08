@@ -5,6 +5,8 @@ import {
   Inject,
   ViewChild,
   HostListener,
+  ElementRef,
+  Renderer2,
 } from '@angular/core';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import {
@@ -52,7 +54,7 @@ function generateNode(level: number, index: number): FakeNode {
   }
 
   return {
-    name: 'level ' + level + ' index ' + index,
+    name: 'level ' + level + 1+index+ ' index ' + index,
     children,
   };
 }
@@ -86,11 +88,11 @@ export class BiTreegridComponent {
   contextMenuPosition = { x: '0px', y: '0px' };
 
   public headeritem:tableheader[] = [
-    { name: 'Col 1', id: 0, show: true, isNode: true },
-    { name: 'Col 2', id: 1, show: true, isNode: false },
-    { name: 'Col 3', id: 2, show: true, isNode: false },
-    { name: 'Col 4', id: 3, show: true, isNode: false },
-    { name: 'Col 5', id: 4, show: true, isNode: false },
+    { name: 'Col 1', id: 0, show: true, isNode: true,sticky:false },
+    { name: 'Col 2', id: 1, show: true, isNode: false,sticky:false },
+    { name: 'Col 3', id: 2, show: true, isNode: false,sticky:false },
+    { name: 'Col 4', id: 3, show: true, isNode: false,sticky:false },
+    { name: 'Col 5', id: 4, show: true, isNode: false,sticky:false },
   ];
 
   public showTd = [true, true, true, true];
@@ -100,6 +102,7 @@ export class BiTreegridComponent {
   persons: any[];
 
   public get inverseOfTranslation(): string {
+    // console.log(this.viewPort)
     if (!this.viewPort || !this.viewPort['_renderedContentOffset']) {
       return '-0px';
     }
@@ -181,19 +184,31 @@ export class BiTreegridComponent {
     if (tables) {
       this.tdWidth = event.clientX;
     }
-    // console.log(event.clientX)
 
-    // var tables = document.getElementsByTagName('table');
   }
 
-  //var tables = document.getElementsByClassName('flexiCol');
+
+  columnsid
+  rowitem
 
   onContextMenu(event: MouseEvent, item, actiontype) {
+
+  //  console.log(tOLeft)
+ 
+    this.columnsid=item.id
+
     this.contextItem = [];
+    if(actiontype=='tbodyaction')
+    {
+      this.rowitem=item
+    }
+  
 
     this.mainContextMenu.forEach((e) => {
+    
       if (e.actiontype == actiontype) {
         this.contextItem.push(e);
+       
       } else if (e.actiontype == actiontype) {
         this.contextItem.push(e);
       }
@@ -208,7 +223,12 @@ export class BiTreegridComponent {
   }
 
   onClickContextMenu(event) {
-    console.log('test', event);
+    console.log(event)
+    if(event.item.label=='Freeze'){
+      this.headeritem[event.value].sticky=!this.headeritem[event.value].sticky
+    }
+    else{
+    
 
     let dialogRef = this.dialog.open(EditColumnDialogComponent, {
       width: '250px',
@@ -220,16 +240,24 @@ export class BiTreegridComponent {
       const headerIntemIndex = this.headeritem.findIndex(
         (item) => item.id === this.contextMenu.menuData.item['id']
       );
-      //this.headerCssData = result;
+      
       this.headeritem[headerIntemIndex].name = result.headername;
     });
+
+    }
+   
+    
   }
 
  displayCounter(count) {
 
   }
+onhightlight($event, item){
+  console.log(item)
+this.rowitem=item
 
-
+}
+ 
 }
 
 // Function that maps a nested node to a flat node

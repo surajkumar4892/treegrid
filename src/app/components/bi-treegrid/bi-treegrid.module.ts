@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NameColumnDialogComponent } from './dialog/column/name/name.component';
 import { ResizableModule } from 'src/app/resizable/resizable.module';
 import { SelectcolumnsModule } from './selectcolumns/selectcolumns.module';
+import { SortDirective } from './sorting/sort.directive';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { SelectcolumnsModule } from './selectcolumns/selectcolumns.module';
     ContextmenuComponent,
     EditColumnDialogComponent,
     NameColumnDialogComponent,
+    SortDirective,
   ],
   imports: [
     CommonModule,
@@ -29,6 +31,6 @@ import { SelectcolumnsModule } from './selectcolumns/selectcolumns.module';
     SelectcolumnsModule
     
   ],
-  exports: [BiTreegridComponent, BiColumnsComponent, BiColumnComponent],
+  exports: [BiTreegridComponent, BiColumnsComponent, BiColumnComponent,SortDirective],
 })
 export class BiTreegridModule {}
