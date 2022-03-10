@@ -3,7 +3,8 @@ export class tableheader {
   id: number;
   show: boolean;
   isNode: boolean;
-  dataType: any;
+  sticky: boolean;
+  dataType?: any;
   columnWidth?: number;
   fontSize?: number;
   fontColor?: string;

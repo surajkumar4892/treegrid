@@ -5,6 +5,8 @@ import {
   Inject,
   ViewChild,
   HostListener,
+  ElementRef,
+  Renderer2,
 } from '@angular/core';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import {
@@ -52,7 +54,7 @@ function generateNode(level: number, index: number): FakeNode {
   }
 
   return {
-    name: 'level ' + level + ' index ' + index,
+    name: 'level ' + level + 1 + index + ' index ' + index,
     children,
   };
 }
@@ -86,16 +88,21 @@ export class BiTreegridComponent {
   contextMenuPosition = { x: '0px', y: '0px' };
 
   public headeritem: tableheader[] = [
-    { name: 'Col 1', id: 0, show: true, isNode: true, dataType: 'string' },
-    { name: 'Col 2', id: 1, show: true, isNode: false, dataType: 'string' },
-    { name: 'Col 3', id: 2, show: true, isNode: false, dataType: 'string' },
-    { name: 'Col 4', id: 3, show: true, isNode: false, dataType: 'string' },
-    { name: 'Col 5', id: 4, show: true, isNode: false, dataType: 'string' },
+    { name: 'Col 1', id: 0, show: true, isNode: true, sticky: false },
+    { name: 'Col 2', id: 1, show: true, isNode: false, sticky: false },
+    { name: 'Col 3', id: 2, show: true, isNode: false, sticky: false },
+    { name: 'Col 4', id: 3, show: true, isNode: false, sticky: false },
+    { name: 'Col 5', id: 4, show: true, isNode: false, sticky: false },
   ];
+
+  public showTd = [true, true, true, true];
 
   nodes: any[];
 
+  persons: any[];
+
   public get inverseOfTranslation(): string {
+    // console.log(this.viewPort)
     if (!this.viewPort || !this.viewPort['_renderedContentOffset']) {
       return '-0px';
     }
@@ -127,6 +134,7 @@ export class BiTreegridComponent {
       treeFlattener
     );
     this.dataSource.data = this.providedData;
+    console.log(this.dataSource.data);
 
     this.nodes = new Array(50000).fill(null).map((item, i) => ({
       id: `${i}`,
@@ -141,6 +149,18 @@ export class BiTreegridComponent {
       })),
     }));
 
+    this.persons = [
+      {
+        name: 'abc 1',
+        email: 'abc1@email.com',
+        address: 'address 1',
+      },
+      {
+        name: 'abc 2',
+        email: 'abc2@email.com',
+        address: 'address 2',
+      },
+    ];
     this.mainContextMenu = MainContextMenuVal;
   }
 
@@ -165,8 +185,18 @@ export class BiTreegridComponent {
     }
   }
 
+  columnsid;
+  rowitem;
+
   onContextMenu(event: MouseEvent, item, actiontype) {
+    //  console.log(tOLeft)
+
+    this.columnsid = item.id;
+
     this.contextItem = [];
+    if (actiontype == 'tbodyaction') {
+      this.rowitem = item;
+    }
 
     this.mainContextMenu.forEach((e) => {
       if (e.actiontype == actiontype) {
@@ -184,21 +214,33 @@ export class BiTreegridComponent {
     this.contextMenu.openMenu();
   }
 
-  onClickContextMenu(event: ContextMenuDetail) {
-    console.log('test', event);
-    let dialogRef = this.dialog.open(EditColumnDialogComponent, {
-      width: '250px',
-      data: {},
-    });
+  onClickContextMenu(event) {
+    console.log(event);
+    if (event.item.label == 'Freeze') {
+      this.headeritem[event.value].sticky =
+        !this.headeritem[event.value].sticky;
+    } else {
+      let dialogRef = this.dialog.open(EditColumnDialogComponent, {
+        width: '250px',
+        data: {},
+      });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (event.id == 1) {
+      dialogRef.afterClosed().subscribe((result) => {
         console.log('The dialog was closed', result);
-      }
-    });
+        const headerIntemIndex = this.headeritem.findIndex(
+          (item) => item.id === this.contextMenu.menuData.item['id']
+        );
+
+        this.headeritem[headerIntemIndex].name = result.headername;
+      });
+    }
   }
 
   displayCounter(count) {}
+  onhightlight($event, item) {
+    console.log(item);
+    this.rowitem = item;
+  }
 }
 
 // Function that maps a nested node to a flat node
