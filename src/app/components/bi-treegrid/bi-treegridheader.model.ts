@@ -3,4 +3,5 @@ export class tableheader{
     id:number
     show:boolean
     isNode:boolean
+    sticky:boolean
 }

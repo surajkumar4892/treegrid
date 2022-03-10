@@ -83,6 +83,10 @@ table {
     cursor: pointer;
         }
       }
+      td.fixedtd{
+        position: sticky;
+      }
+
     }
   }
 }
@@ -94,3 +98,4 @@ table {
   }
 }
 .fixedtd{ position: sticky; left: 0; z-index: 1; background-color: #fff;}
+.highlighted{ background-color: #ccc;}

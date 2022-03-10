@@ -7,6 +7,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { tableheader } from '../bi-treegridheader.model';
 import { ContextMenuDetail } from './contextmenu.modal';
 
 @Component({
@@ -16,16 +17,23 @@ import { ContextMenuDetail } from './contextmenu.modal';
 })
 export class ContextmenuComponent implements OnInit, OnChanges {
   @Input() contextMenu: Array<ContextMenuDetail> = [];
-  @Output() contextMenuVal: EventEmitter<ContextMenuDetail> =
+ @Input() colmuid:number
+ @Input() colmuidheder
+  @Output() contextMenuVal: EventEmitter<any> =
     new EventEmitter();
 
   constructor() {}
 
   ngOnInit(): void {}
 
-  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.colmuid)
+  }
 
   onButtonClick(item: ContextMenuDetail) {
-    this.contextMenuVal.emit(item);
+   
+   let contextvalue={item,'value':this.colmuid}
+    console.log()
+    this.contextMenuVal.emit(contextvalue);
   }
 }
