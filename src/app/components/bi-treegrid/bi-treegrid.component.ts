@@ -73,31 +73,27 @@ export interface FakeFlatNode {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BiTreegridComponent {
-  @HostListener('window:scroll', ['$event']) 
+  @HostListener('window:scroll', ['$event'])
   @ViewChild(CdkVirtualScrollViewport, { static: false })
   public viewPort: CdkVirtualScrollViewport;
 
   contextItem: ContextMenuDetail[] = [];
   mainContextMenu: ContextMenuDetail[] = [];
-  scrolladdclass:boolean=false
+  scrolladdclass: boolean = false;
 
   @ViewChild(MatMenuTrigger)
   contextMenu: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
 
-  public headeritem:tableheader[] = [
-    { name: 'Col 1', id: 0, show: true, isNode: true },
-    { name: 'Col 2', id: 1, show: true, isNode: false },
-    { name: 'Col 3', id: 2, show: true, isNode: false },
-    { name: 'Col 4', id: 3, show: true, isNode: false },
-    { name: 'Col 5', id: 4, show: true, isNode: false },
+  public headeritem: tableheader[] = [
+    { name: 'Col 1', id: 0, show: true, isNode: true, dataType: 'string' },
+    { name: 'Col 2', id: 1, show: true, isNode: false, dataType: 'string' },
+    { name: 'Col 3', id: 2, show: true, isNode: false, dataType: 'string' },
+    { name: 'Col 4', id: 3, show: true, isNode: false, dataType: 'string' },
+    { name: 'Col 5', id: 4, show: true, isNode: false, dataType: 'string' },
   ];
 
-  public showTd = [true, true, true, true];
-
   nodes: any[];
-
-  persons: any[];
 
   public get inverseOfTranslation(): string {
     if (!this.viewPort || !this.viewPort['_renderedContentOffset']) {
@@ -131,7 +127,6 @@ export class BiTreegridComponent {
       treeFlattener
     );
     this.dataSource.data = this.providedData;
-    console.log(this.dataSource.data);
 
     this.nodes = new Array(50000).fill(null).map((item, i) => ({
       id: `${i}`,
@@ -146,20 +141,7 @@ export class BiTreegridComponent {
       })),
     }));
 
-    this.persons = [
-      {
-        name: 'abc 1',
-        email: 'abc1@email.com',
-        address: 'address 1',
-      },
-      {
-        name: 'abc 2',
-        email: 'abc2@email.com',
-        address: 'address 2',
-      },
-    ];
     this.mainContextMenu = MainContextMenuVal;
-
   }
 
   // Number of dom nodes rendered in the virtually scrolling tree
@@ -181,12 +163,7 @@ export class BiTreegridComponent {
     if (tables) {
       this.tdWidth = event.clientX;
     }
-    // console.log(event.clientX)
-
-    // var tables = document.getElementsByTagName('table');
   }
-
-  //var tables = document.getElementsByClassName('flexiCol');
 
   onContextMenu(event: MouseEvent, item, actiontype) {
     this.contextItem = [];
@@ -207,29 +184,21 @@ export class BiTreegridComponent {
     this.contextMenu.openMenu();
   }
 
-  onClickContextMenu(event) {
+  onClickContextMenu(event: ContextMenuDetail) {
     console.log('test', event);
-
     let dialogRef = this.dialog.open(EditColumnDialogComponent, {
       width: '250px',
       data: {},
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed', result);
-      const headerIntemIndex = this.headeritem.findIndex(
-        (item) => item.id === this.contextMenu.menuData.item['id']
-      );
-      //this.headerCssData = result;
-      this.headeritem[headerIntemIndex].name = result.headername;
+      if (event.id == 1) {
+        console.log('The dialog was closed', result);
+      }
     });
   }
 
- displayCounter(count) {
-
-  }
-
-
+  displayCounter(count) {}
 }
 
 // Function that maps a nested node to a flat node

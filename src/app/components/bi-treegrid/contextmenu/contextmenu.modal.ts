@@ -8,15 +8,15 @@ export class ContextMenuDetail {
 
 export let MainContextMenuVal: ContextMenuDetail[] = [
   {
-    label: 'Edit',
-    icon: 'edit_outline',
+    label: 'New',
+    icon: 'add_outline',
     id: 1,
     actiontype: 'headeraction',
     isenable: false,
   },
   {
-    label: 'New',
-    icon: 'add_outline',
+    label: 'Edit',
+    icon: 'edit_outline',
     id: 2,
     actiontype: 'headeraction',
     isenable: false,
