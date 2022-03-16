@@ -54,7 +54,7 @@ function generateNode(level: number, index: number): FakeNode {
   }
 
   return {
-    name: 'level ' + level + 1+index+ ' index ' + index,
+    name: 'level ' + level + 1 + index + ' index ' + index,
     children,
   };
 }
@@ -75,24 +75,24 @@ export interface FakeFlatNode {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BiTreegridComponent {
-  @HostListener('window:scroll', ['$event']) 
+  @HostListener('window:scroll', ['$event'])
   @ViewChild(CdkVirtualScrollViewport, { static: false })
   public viewPort: CdkVirtualScrollViewport;
 
   contextItem: ContextMenuDetail[] = [];
   mainContextMenu: ContextMenuDetail[] = [];
-  scrolladdclass:boolean=false
+  scrolladdclass: boolean = false;
 
   @ViewChild(MatMenuTrigger)
   contextMenu: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
 
-  public headeritem:tableheader[] = [
-    { name: 'Col 1', id: 0, show: true, isNode: true,sticky:false },
-    { name: 'Col 2', id: 1, show: true, isNode: false,sticky:false },
-    { name: 'Col 3', id: 2, show: true, isNode: false,sticky:false },
-    { name: 'Col 4', id: 3, show: true, isNode: false,sticky:false },
-    { name: 'Col 5', id: 4, show: true, isNode: false,sticky:false },
+  public headeritem: tableheader[] = [
+    { name: 'Col 1', id: 0, show: true, isNode: true, sticky: false },
+    { name: 'Col 2', id: 1, show: true, isNode: false, sticky: false },
+    { name: 'Col 3', id: 2, show: true, isNode: false, sticky: false },
+    { name: 'Col 4', id: 3, show: true, isNode: false, sticky: false },
+    { name: 'Col 5', id: 4, show: true, isNode: false, sticky: false },
   ];
 
   public showTd = [true, true, true, true];
@@ -162,7 +162,6 @@ export class BiTreegridComponent {
       },
     ];
     this.mainContextMenu = MainContextMenuVal;
-
   }
 
   // Number of dom nodes rendered in the virtually scrolling tree
@@ -184,31 +183,24 @@ export class BiTreegridComponent {
     if (tables) {
       this.tdWidth = event.clientX;
     }
-
   }
 
-
-  columnsid
-  rowitem
+  columnsid;
+  rowitem;
 
   onContextMenu(event: MouseEvent, item, actiontype) {
+    //  console.log(tOLeft)
 
-  //  console.log(tOLeft)
- 
-    this.columnsid=item.id
+    this.columnsid = item.id;
 
     this.contextItem = [];
-    if(actiontype=='tbodyaction')
-    {
-      this.rowitem=item
+    if (actiontype == 'tbodyaction') {
+      this.rowitem = item;
     }
-  
 
     this.mainContextMenu.forEach((e) => {
-    
       if (e.actiontype == actiontype) {
         this.contextItem.push(e);
-       
       } else if (e.actiontype == actiontype) {
         this.contextItem.push(e);
       }
@@ -223,41 +215,32 @@ export class BiTreegridComponent {
   }
 
   onClickContextMenu(event) {
-    console.log(event)
-    if(event.item.label=='Freeze'){
-      this.headeritem[event.value].sticky=!this.headeritem[event.value].sticky
+    console.log(event);
+    if (event.item.label == 'Freeze') {
+      this.headeritem[event.value].sticky =
+        !this.headeritem[event.value].sticky;
+    } else {
+      let dialogRef = this.dialog.open(EditColumnDialogComponent, {
+        width: '250px',
+        data: {},
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log('The dialog was closed', result);
+        const headerIntemIndex = this.headeritem.findIndex(
+          (item) => item.id === this.contextMenu.menuData.item['id']
+        );
+
+        this.headeritem[headerIntemIndex].name = result.headername;
+      });
     }
-    else{
-    
-
-    let dialogRef = this.dialog.open(EditColumnDialogComponent, {
-      width: '250px',
-      data: {},
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed', result);
-      const headerIntemIndex = this.headeritem.findIndex(
-        (item) => item.id === this.contextMenu.menuData.item['id']
-      );
-      
-      this.headeritem[headerIntemIndex].name = result.headername;
-    });
-
-    }
-   
-    
   }
 
- displayCounter(count) {
-
+  displayCounter(count) {}
+  onhightlight($event, item) {
+    console.log(item);
+    this.rowitem = item;
   }
-onhightlight($event, item){
-  console.log(item)
-this.rowitem=item
-
-}
- 
 }
 
 // Function that maps a nested node to a flat node
