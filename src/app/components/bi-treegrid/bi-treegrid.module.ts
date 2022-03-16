@@ -11,6 +11,7 @@ import { NameColumnDialogComponent } from './dialog/column/name/name.component';
 import { ResizableModule } from 'src/app/resizable/resizable.module';
 import { SelectcolumnsModule } from './selectcolumns/selectcolumns.module';
 import { SortDirective } from './sorting/sort.directive';
+import { StickyDirectiveModule } from './directives/sticky.directive';
 
 @NgModule({
   declarations: [
@@ -28,9 +29,14 @@ import { SortDirective } from './sorting/sort.directive';
     FormsModule,
     ReactiveFormsModule,
     ResizableModule,
-    SelectcolumnsModule
-    
+    SelectcolumnsModule,
+    StickyDirectiveModule,
   ],
-  exports: [BiTreegridComponent, BiColumnsComponent, BiColumnComponent,SortDirective],
+  exports: [
+    BiTreegridComponent,
+    BiColumnsComponent,
+    BiColumnComponent,
+    SortDirective,
+  ],
 })
 export class BiTreegridModule {}

@@ -7,14 +7,14 @@
     <div class="table-panel">
 
         <cdk-virtual-scroll-viewport class="virtual-scroll-container" itemSize="18">
-            <table class="tablehead">
+            <table class="tablehead" stickyTable>
                 <thead>
                     <tr>
                         <!-- <th resizable [style.top]="inverseOfTranslation">Col 1</th>
                     <th resizable [style.top]="inverseOfTranslation">Col 2</th>
                     <th [style.top]="inverseOfTranslation">Col 3</th> -->
                         <ng-container *ngFor="let data of headeritem">
-                            <th [appSort]="dataSource.data" data-order="desc" scope="col" *ngIf="data.show" sticky
+                            <th sticky [appSort]="dataSource.data" data-order="desc" scope="col" *ngIf="data.show"
                                 resizable [style.top]="inverseOfTranslation">
                                 <div (contextmenu)="onContextMenu($event, data,'headeraction')"> {{data.name}}</div>
                             </th>
@@ -29,7 +29,7 @@
 
                         <ng-container *ngFor="let data of headeritem, let j = index">
                             <ng-container *ngIf="data.isNode && data.show">
-                                <td [id]="j" (contextmenu)="onContextMenu($event, node,'tbodyaction')">
+                                <td sticky [id]="j" (contextmenu)="onContextMenu($event, node,'tbodyaction')">
                                     <div class="node" [style.padding-left]="node.level * 24 + 'px'">
                                         <button class="expendbtn" (click)="treeControl.toggle(node)"
                                             *ngIf="node.hasChildren">
@@ -44,8 +44,7 @@
                             </ng-container>
 
                             <ng-container *ngIf="!data.isNode && data.show">
-                                <td [id]="j" sticky [ngClass]="data.sticky==true?'fixedtd':''"
-                                    (contextmenu)="onContextMenu($event, node,'tbodyaction')">Col {{j+1}}
+                                <td [id]="j" (contextmenu)="onContextMenu($event, node,'tbodyaction')">Col {{j+1}}
                                     Value -
                                     {{node.name}}</td>
                             </ng-container>
