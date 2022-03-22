@@ -96,7 +96,7 @@ export class BiTreegridComponent {
   ];
 
   public showTd = [true, true, true, true];
-
+  colspan:number
   nodes: any[];
 
   persons: any[];
@@ -121,6 +121,7 @@ export class BiTreegridComponent {
     readonly dataProvider: RandomDataProvider,
     private dialog: MatDialog
   ) {
+this.colspan=this.headeritem.length
     // Tells tree data source builder how to flatten our nested node data into flat nodes
     const treeFlattener = new MatTreeFlattener<FakeNode, FakeFlatNode>(
       nodeTransformer,
@@ -217,8 +218,8 @@ export class BiTreegridComponent {
   onClickContextMenu(event) {
     console.log(event);
     if (event.item.label == 'Freeze') {
-      this.headeritem[event.value].sticky =
-        !this.headeritem[event.value].sticky;
+      this.headeritem[event.value].sticky =!this.headeritem[event.value].sticky;
+      console.log(this.headeritem[event.value].sticky)
     } else {
       let dialogRef = this.dialog.open(EditColumnDialogComponent, {
         width: '250px',
@@ -241,6 +242,7 @@ export class BiTreegridComponent {
     console.log(item);
     this.rowitem = item;
   }
+  // leftitem=100+'px'
 }
 
 // Function that maps a nested node to a flat node
