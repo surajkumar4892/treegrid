@@ -10,9 +10,6 @@
             <table class="tablehead" stickyTable>
                 <thead>
                     <tr>
-                        <!-- <th resizable [style.top]="inverseOfTranslation">Col 1</th>
-                    <th resizable [style.top]="inverseOfTranslation">Col 2</th>
-                    <th [style.top]="inverseOfTranslation">Col 3</th> -->
                         <ng-container *ngFor="let data of headeritem">
                             <th sticky [appSort]="dataSource.data" data-order="desc" scope="col" *ngIf="data.show"
                                 resizable [style.top]="inverseOfTranslation">
